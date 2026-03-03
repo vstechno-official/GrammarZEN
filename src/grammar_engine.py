@@ -80,13 +80,13 @@ class GrammarEngine:
         for m in matches:
             issues.append(GrammarIssue(
                 offset=m.offset,
-                length=m.errorLength,
+                length=m.error_length,
                 message=m.message,
                 replacements=list(m.replacements[:5]),
-                rule_id=m.ruleId,
+                rule_id=m.rule_id,
                 category=m.category,
                 context=m.context,
-                severity=self._calculate_severity(m.ruleId, m.category)
+                severity=self._calculate_severity(m.rule_id, m.category)
             ))
         corrected = language_tool_python.utils.correct(text, matches)
         words = text.split()
