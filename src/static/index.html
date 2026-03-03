@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrammarZen — Free Grammar Correction</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-wrapper">
+<header class="header">
+<div class="header-inner">
+<div class="brand">
+<div class="brand-icon">
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+<defs><linearGradient id="g1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient></defs>
+<rect width="32" height="32" rx="8" fill="url(#g1)"/>
+<path d="M8 10h10M8 15h16M8 20h12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+</div>
+<div class="brand-text">
+<span class="brand-name">GrammarZen</span>
+<span class="brand-tagline">Free · Instant · Accurate</span>
+</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<span class="status-text">Initializing...</span>
+</div>
+</div>
+</header>
+<main class="main-content">
+<div class="editor-layout">
+<div class="editor-panel">
+<div class="panel-header">
+<div class="panel-tabs">
+<button class="tab-btn active" data-tab="input">Input</button>
+<button class="tab-btn" data-tab="corrected">Corrected</button>
+<button class="tab-btn" data-tab="diff">Diff View</button>
+</div>
+<div class="editor-actions">
+<button class="action-btn secondary" id="sampleBtn">Sample</button>
+<button class="action-btn secondary" id="pasteBtn">Paste</button>
+<button class="action-btn secondary" id="clearBtn">Clear</button>
+<button class="action-btn primary" id="correctBtn">Check Grammar</button>
+</div>
+</div>
+<div class="tab-content active" id="tab-input">
+<div class="textarea-wrapper">
+<textarea class="main-textarea" id="inputText" placeholder="Type or paste your text here and press Check Grammar...&#10;&#10;Tip: Press Ctrl+Enter to check quickly." spellcheck="false" maxlength="10000"></textarea>
+<div class="textarea-footer">
+<div class="char-stats">
+<span><span id="charCount">0</span> chars</span>
+<span class="separator">·</span>
+<span><span id="wordCount">0</span> words</span>
+<span class="separator">·</span>
+<span><span id="sentenceCount">0</span> sentences</span>
+</div>
+<span class="score-badge-mini" id="scoreMini">Score: —</span>
+</div>
+</div>
+</div>
+<div class="tab-content" id="tab-corrected">
+<div id="correctedOutput" class="corrected-output">
+<div class="empty-state">
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+<p>Your corrected text<br>will appear here.</p>
+</div>
+</div>
+<div class="copy-bar" id="copyBar" style="display:none;">
+<button class="action-btn secondary" id="copyOrigBtn">Copy Original</button>
+<button class="action-btn secondary" id="copyBtn">Copy Corrected</button>
+<button class="action-btn primary" id="applyBtn">Apply to Input</button>
+</div>
+</div>
+<div class="tab-content" id="tab-diff">
+<div id="diffOutput" class="diff-output">
+<div class="empty-state"><p>Differences will<br>appear here.</p></div>
+</div>
+</div>
+</div>
+<aside class="sidebar">
+<div class="score-card">
+<div class="score-header">
+<span class="score-label">Grammar Score</span>
+<span class="processing-time" id="processingTime"></span>
+</div>
+<div class="score-display">
+<svg class="score-ring" width="80" height="80" viewBox="0 0 100 100">
+<circle cx="50" cy="50" r="40" fill="none" stroke="#2a2a3e" stroke-width="10"/>
+<circle id="scoreCircle" cx="50" cy="50" r="40" fill="none" stroke="#6366f1" stroke-width="10" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s ease,stroke 0.5s ease;"/>
+<text id="scoreTextMain" x="50" y="46" text-anchor="middle" font-size="22" font-weight="700" fill="#e4e4f0">—</text>
+<text x="50" y="62" text-anchor="middle" font-size="11" fill="#55556a">/100</text>
+</svg>
+<div class="score-meta">
+<div class="score-grade" id="scoreGrade"></div>
+<div class="score-issues" id="scoreIssues"></div>
+</div>
+</div>
+<div class="mini-stats">
+<div class="mini-stat"><span class="mini-stat-label">Readability</span><span class="mini-stat-value" id="readabilityVal">—</span></div>
+<div class="mini-stat"><span class="mini-stat-label">Sentiment</span><span class="mini-stat-value" id="sentimentVal">—</span></div>
+<div class="mini-stat"><span class="mini-stat-label">Avg Sent.</span><span class="mini-stat-value" id="avgSentVal">—</span></div>
+<div class="mini-stat"><span class="mini-stat-label">Vocab Rich.</span><span class="mini-stat-value" id="vocabVal">—</span></div>
+</div>
+</div>
+<div class="issues-panel">
+<div class="issues-header">
+<span class="issues-title">Issues</span>
+<div class="issues-filter">
+<button class="filter-btn active" data-filter="all">All (0)</button>
+<button class="filter-btn" data-filter="error">Error (0)</button>
+<button class="filter-btn" data-filter="warning">Warning (0)</button>
+<button class="filter-btn" data-filter="style">Style (0)</button>
+</div>
+</div>
+<div class="issues-list" id="issuesList">
+<div class="empty-state" style="padding:32px 16px;">
+<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<p>Issues will appear<br>after analysis.</p>
+</div>
+</div>
+</div>
+<div class="suggestions-panel" id="suggestionsPanel" style="display:none;">
+<div class="suggestions-header">Writing Tips</div>
+<div class="suggestions-list" id="suggestionsList"></div>
+</div>
+</aside>
+</div>
+</main>
+</div>
+<div class="loading-overlay" id="loadingOverlay" style="display:none;">
+<div class="loading-card">
+<div class="loading-spinner"></div>
+<div class="loading-text" id="loadingText">Analyzing your text...</div>
+<div class="loading-sub">@aVedantSalaskarInitiative</div>
+</div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>

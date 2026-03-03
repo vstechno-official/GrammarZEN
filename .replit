@@ -1,6 +1,11 @@
-run = "cowsay Configure me!"
-entrypoint = "README.md"
+run = "py .grammarzen/main.py"
+entrypoint = "main.py"
 
 [nix]
-channel = "stable-24_05"
-packages = ["cowsay"]
+channel = "stable-23_11"
+
+[deployment]
+run = ["sh", "-c", "python main.py"]
+
+[agent]
+expertMode = true

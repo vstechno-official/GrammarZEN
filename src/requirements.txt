@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+language-tool-python
+spacy
+torch
+transformers
+textblob
+nltk
+python-multipart
+aiofiles
+httpx
