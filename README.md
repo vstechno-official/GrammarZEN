@@ -1,7 +1,7 @@
 # Grammarzen: A un-needed but FREE grammar checker
 
-### honestly, i was fed up with grammarly. so i tried freaking the grammar checker idea.
+### honestly, i was fed up with grammarly-pricing-prompts and modals.
 
-#### Um it  took hours of my time! guys.
+#### Be happy i opensourced it, else you would have to pay$1 for it per month.
 
-### What the fish!
+### ps- it was closed source and 4$ permonth sub but opensourced it because had only X users.
