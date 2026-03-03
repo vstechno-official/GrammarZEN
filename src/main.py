@@ -2,6 +2,10 @@ import asyncio
 import threading
 import time
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -9,6 +13,9 @@ from pydantic import BaseModel, validator
 from grammar_engine import GrammarEngine
 from text_analyzer import analyze_sentiment, calculate_readability, generate_suggestions
 import uvicorn
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 app = FastAPI(title="GrammarZen", version="1.0.0")
 engine = GrammarEngine()
@@ -21,7 +28,7 @@ def preload_engine():
 
 threading.Thread(target=preload_engine, daemon=True).start()
 
-app.mount("/static", StaticFiles(directory="src/static"), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 class TextRequest(BaseModel):
@@ -39,7 +46,7 @@ class TextRequest(BaseModel):
 
 @app.get("/")
 async def root():
-    return FileResponse("src/static/index.html")
+    return FileResponse(os.path.join(STATIC_DIR, "index.html"))
 
 
 @app.get("/health")
@@ -93,5 +100,5 @@ async def correct_text(req: TextRequest):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 5000))
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False, workers=1)
