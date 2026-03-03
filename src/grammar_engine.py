@@ -2,6 +2,7 @@ import language_tool_python
 import threading
 from dataclasses import dataclass, field
 from typing import List
+from custom_rules import check_custom_rules
 
 
 @dataclass
@@ -89,12 +90,40 @@ class GrammarEngine:
                 severity=self._calculate_severity(m.rule_id, m.category)
             ))
         corrected = language_tool_python.utils.correct(text, matches)
+        custom_issues, custom_corrected = check_custom_rules(text)
+        existing_ranges = [(i.offset, i.offset + i.length) for i in issues]
+        for ci in custom_issues:
+            ci_start = ci['offset']
+            ci_end = ci_start + ci['length']
+            overlaps = any(
+                not (ci_end <= es or ci_start >= ee)
+                for es, ee in existing_ranges
+            )
+            if not overlaps:
+                issues.append(GrammarIssue(
+                    offset=ci['offset'],
+                    length=ci['length'],
+                    message=ci['message'],
+                    replacements=ci['replacements'],
+                    rule_id=ci['rule_id'],
+                    category=ci['category'],
+                    context=ci['context'],
+                    severity=ci['severity']
+                ))
+        if custom_issues and not matches:
+            corrected = custom_corrected
+        elif custom_issues:
+            corrected = check_custom_rules(corrected)[1]
         words = text.split()
         sentences = [s.strip() for s in __import__('re').split(r'[.!?]+', text) if s.strip()]
         word_count = len(words)
         sentence_count = max(len(sentences), 1)
         issue_count = len(issues)
-        penalty = min(issue_count * 8, 95)
+        severity_weights = {'error': 15, 'warning': 8, 'style': 3}
+        weighted_penalty = sum(severity_weights.get(i.severity, 8) for i in issues)
+        error_density = issue_count / max(word_count, 1)
+        density_multiplier = 1.0 + min(error_density * 5, 2.0)
+        penalty = min(weighted_penalty * density_multiplier, 95)
         score = max(100 - penalty, 5) if text.strip() else 0
         avg_sent = round(word_count / sentence_count, 1)
         unique_words = set(w.lower().strip('.,!?;:') for w in words)

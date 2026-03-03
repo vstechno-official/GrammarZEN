@@ -47,7 +47,7 @@ const offset=314-(score/100)*314;
 elements.scoreCircle.style.strokeDashoffset=offset;
 const color=score>=85?'#4ade80':score>=70?'#6366f1':score>=50?'#fbbf24':'#f87171';
 elements.scoreCircle.style.stroke=color;
-const grade=score>=95?'Excellent':score>=85?'Very Good':score>=70?'Good':score>=50?'Fair':'Needs Work';
+const grade=score>=95?'Excellent':score>=85?'Very Good':score>=70?'Good':score>=50?'Fair':score>=30?'Poor':'Needs Work';
 elements.scoreTextMain.textContent=Math.round(score);
 elements.scoreGrade.textContent=grade;
 elements.scoreGrade.style.color=color;
