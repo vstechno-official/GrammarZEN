@@ -10,7 +10,7 @@ scoreCircle:$('scoreCircle'),scoreTextMain:$('scoreTextMain'),scoreGrade:$('scor
 scoreIssues:$('scoreIssues'),readabilityVal:$('readabilityVal'),sentimentVal:$('sentimentVal'),
 avgSentVal:$('avgSentVal'),vocabVal:$('vocabVal'),processingTime:$('processingTime'),
 issuesList:$('issuesList'),suggestionsList:$('suggestionsList'),suggestionsPanel:$('suggestionsPanel'),
-correctedOutput:$('correctedOutput'),diffOutput:$('diffOutput'),copyBar:$('copyBar'),
+correctedOutput:$('correctedOutput'),copyBar:$('copyBar'),
 loadingOverlay:$('loadingOverlay'),loadingText:$('loadingText'),
 statusDot:document.querySelector('.status-dot'),statusText:document.querySelector('.status-text'),
 scoreMini:$('scoreMini')
@@ -91,29 +91,6 @@ updateCounts();
 showToast(`Replaced with "${replacement}"`, 'success');
 correctText();
 }
-function buildDiff(original,corrected){
-if(!original||!corrected)return'';
-const ow=original.split(/(\s+)/);
-const cw=corrected.split(/(\s+)/);
-const m=ow.length,n=cw.length;
-const dp=Array.from({length:m+1},()=>new Array(n+1).fill(0));
-for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){
-if(ow[i-1]===cw[j-1])dp[i][j]=dp[i-1][j-1]+1;
-else dp[i][j]=Math.max(dp[i-1][j],dp[i][j-1]);
-}
-const result=[];
-let i=m,j=n;
-while(i>0||j>0){
-if(i>0&&j>0&&ow[i-1]===cw[j-1]){result.unshift({type:'same',text:ow[i-1]});i--;j--;}
-else if(j>0&&(i===0||dp[i][j-1]>=dp[i-1][j])){result.unshift({type:'add',text:cw[j-1]});j--;}
-else{result.unshift({type:'remove',text:ow[i-1]});i--;}
-}
-return result.map(p=>{
-if(p.type==='add')return`<span class="diff-added">${escapeHtml(p.text)}</span>`;
-if(p.type==='remove')return`<span class="diff-removed">${escapeHtml(p.text)}</span>`;
-return escapeHtml(p.text);
-}).join('');
-}
 function updateFilterCounts(issues){
 const counts={all:issues.length,error:0,warning:0,style:0};
 issues.forEach(i=>{if(counts[i.severity]!==undefined)counts[i.severity]++;});
@@ -139,8 +116,6 @@ elements.avgSentVal.textContent=`${data.avg_sentence_length} words`;
 elements.vocabVal.textContent=`${data.vocabulary_richness}%`;
 elements.processingTime.textContent=`${data.processing_time_ms}ms`;
 elements.correctedOutput.innerHTML=data.corrected_text?`<p style="white-space:pre-wrap;line-height:1.8;">${escapeHtml(data.corrected_text)}</p>`:`<div class="empty-state"><p>No corrections needed.</p></div>`;
-const diffHtml=buildDiff(data.original_text,data.corrected_text);
-elements.diffOutput.innerHTML=diffHtml?`<div style="white-space:pre-wrap;line-height:1.8;">${diffHtml}</div>`:`<div class="empty-state"><p>No differences found.</p></div>`;
 elements.copyBar.style.display='flex';
 renderIssues(data.issues,state.currentFilter);
 updateFilterCounts(data.issues);
@@ -178,7 +153,6 @@ function clearAll(){
 elements.inputText.value='';updateCounts();
 const empty1=`<div class="empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p>Your corrected text<br>will appear here.</p></div>`;
 elements.correctedOutput.innerHTML=empty1;
-elements.diffOutput.innerHTML=`<div class="empty-state"><p>Differences will appear here.</p></div>`;
 elements.issuesList.innerHTML=`<div class="empty-state" style="padding:32px 16px;"><p>Issues will appear<br>after analysis.</p></div>`;
 elements.suggestionsList.innerHTML='';elements.suggestionsPanel.style.display='none';
 elements.copyBar.style.display='none';
