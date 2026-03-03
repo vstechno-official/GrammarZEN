@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 from grammar_engine import GrammarEngine
 from text_analyzer import analyze_sentiment, calculate_readability, generate_suggestions
 import uvicorn
@@ -35,7 +35,8 @@ class TextRequest(BaseModel):
     text: str
     mode: str = "full"
 
-    @validator('text')
+    @field_validator('text')
+    @classmethod
     def text_must_not_be_empty(cls, v):
         if not v or not v.strip():
             raise ValueError('Text cannot be empty')
