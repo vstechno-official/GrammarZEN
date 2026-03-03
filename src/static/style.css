@@ -44,6 +44,11 @@ body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;fo
 .brand-tagline{font-size:0.85rem;color:var(--primary);font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
 
 
+.header-actions{display:flex;align-items:center;gap:14px}
+.api-link{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--primary);border:2px solid var(--primary);border-radius:var(--radius);text-decoration:none;transition:var(--transition);font-family:'Rajdhani',sans-serif}
+.api-link:hover{background:var(--primary);color:#fff;transform:translateY(-1px);box-shadow:0 4px 12px var(--primary-glow)}
+.api-link svg{flex-shrink:0}
+
 .main-content{flex:1;max-width:1400px;margin:0 auto;width:100%;padding:32px}
 .editor-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;align-items:start}
 

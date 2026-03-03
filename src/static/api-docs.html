@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrammarZen API Documentation</title>
+<link rel="icon" type="image/png" href="/static/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Whois+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#0D1117;
+--surface:#161B22;
+--surface2:#1C2129;
+--surface3:#21262D;
+--border:#30363D;
+--border-hl:#388BFD40;
+--text:#E6EDF3;
+--text2:#8B949E;
+--text3:#484F58;
+--accent:#58A6FF;
+--accent2:#388BFD;
+--green:#3FB950;
+--green-bg:#23883312;
+--red:#F85149;
+--red-bg:#F8514918;
+--orange:#D29922;
+--orange-bg:#D2992218;
+--purple:#BC8CFF;
+--mono:'Whois Mono', 'Courier New', monospace;
+--radius:8px;
+}
+html{font-size:15px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh;line-height:1.7}
+a{color:var(--accent);text-decoration:none;transition:color 0.15s}
+a:hover{color:var(--purple)}
+
+.page{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.top-bar-left{display:flex;align-items:center;gap:14px}
+.top-bar-logo{width:36px;height:36px;border-radius:6px}
+.top-bar-title{font-size:1.1rem;color:var(--text);letter-spacing:0.5px}
+.top-bar-title span{color:var(--accent)}
+.back-link{font-size:0.85rem;color:var(--text2);padding:6px 14px;border:1px solid var(--border);border-radius:var(--radius);transition:all 0.15s}
+.back-link:hover{color:var(--accent);border-color:var(--accent)}
+
+.hero{margin-bottom:56px}
+.hero h1{font-size:2.2rem;font-weight:400;color:var(--text);margin-bottom:12px;letter-spacing:-0.5px}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:1rem;color:var(--text2);max-width:560px;line-height:1.8}
+
+.badge-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text2)}
+.badge.green{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.badge.orange{border-color:var(--orange);color:var(--orange);background:var(--orange-bg)}
+.badge.red{border-color:var(--red);color:var(--red);background:var(--red-bg)}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.section{margin-bottom:48px}
+.section-title{font-size:0.8rem;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+
+.endpoint-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+.endpoint-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.method{font-size:0.8rem;font-weight:400;padding:4px 10px;border-radius:4px;text-transform:uppercase;letter-spacing:1px}
+.method.get{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.method.post{background:var(--accent);color:var(--bg);border:1px solid var(--accent)}
+.endpoint-path{font-size:1rem;color:var(--text)}
+.endpoint-body{padding:20px}
+.endpoint-desc{color:var(--text2);margin-bottom:16px;font-size:0.95rem}
+
+.param-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.param-table th{text-align:left;font-size:0.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:8px 12px;border-bottom:1px solid var(--border);font-weight:400}
+.param-table td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text2);vertical-align:top}
+.param-table tr:last-child td{border-bottom:none}
+.param-name{color:var(--accent)}
+.param-type{color:var(--purple);font-size:0.8rem}
+.param-req{color:var(--red);font-size:0.75rem}
+.param-opt{color:var(--text3);font-size:0.75rem}
+
+.code-block{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px;overflow-x:auto;margin:12px 0;font-size:0.85rem;line-height:1.8;color:var(--text2);position:relative}
+.code-block .key{color:var(--accent)}
+.code-block .str{color:var(--green)}
+.code-block .num{color:var(--orange)}
+.code-block .comment{color:var(--text3)}
+.code-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:8px;margin-top:16px}
+.copy-btn{position:absolute;top:10px;right:10px;background:var(--surface3);border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;font-family:var(--mono);font-size:0.7rem;cursor:pointer;transition:all 0.15s}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+.try-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.try-title{font-size:0.95rem;color:var(--text);margin-bottom:16px}
+.try-row{display:flex;gap:10px;margin-bottom:12px}
+.try-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:0.9rem;outline:none;transition:border-color 0.15s}
+.try-input:focus{border-color:var(--accent)}
+.try-btn{background:var(--accent2);color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:var(--mono);font-size:0.85rem;cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.try-btn:hover{background:var(--accent)}
+.try-btn:disabled{opacity:0.4;cursor:not-allowed}
+.try-output{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px;font-size:0.85rem;line-height:1.8;color:var(--text2);min-height:120px;max-height:400px;overflow-y:auto;white-space:pre-wrap;display:none}
+.try-status{display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--text3);margin-bottom:8px}
+.try-status.success{color:var(--green)}
+.try-status.error{color:var(--red)}
+.try-rate{font-size:0.8rem;color:var(--text3);margin-top:8px}
+
+.rate-card{background:var(--surface);border:1px solid var(--orange);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px}
+.rate-card h3{font-size:0.95rem;font-weight:400;color:var(--orange);margin-bottom:12px}
+.rate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rate-item{text-align:center}
+.rate-value{font-size:1.4rem;color:var(--text);display:block;margin-bottom:4px}
+.rate-label{font-size:0.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+
+.response-fields{margin-top:12px}
+.field-item{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)}
+.field-item:last-child{border-bottom:none}
+.field-name{color:var(--accent);min-width:180px;flex-shrink:0}
+.field-desc{color:var(--text2);font-size:0.85rem}
+
+.status-codes{margin-top:16px}
+.status-item{display:flex;align-items:center;gap:10px;padding:8px 0}
+.status-code{font-size:0.85rem;padding:2px 8px;border-radius:4px}
+.status-code.s2xx{background:var(--green-bg);color:var(--green)}
+.status-code.s4xx{background:var(--red-bg);color:var(--red)}
+.status-code.s5xx{background:var(--orange-bg);color:var(--orange)}
+.status-text{color:var(--text2);font-size:0.85rem}
+
+.footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--text3);font-size:0.8rem}
+
+@media(max-width:640px){
+.hero h1{font-size:1.6rem}
+.rate-grid{grid-template-columns:1fr}
+.try-row{flex-direction:column}
+.top-bar{flex-direction:column;gap:12px;align-items:flex-start}
+.endpoint-header{flex-direction:column;align-items:flex-start;gap:8px}
+.field-item{flex-direction:column;gap:4px}
+.field-name{min-width:auto}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="top-bar">
+<div class="top-bar-left">
+<img src="/static/logo.png" alt="GrammarZen" class="top-bar-logo">
+<div class="top-bar-title"><span>GrammarZen</span> / api</div>
+</div>
+<a href="/" class="back-link">&larr; Back to App</a>
+</div>
+
+<div class="hero">
+<h1><span>API</span> Documentation</h1>
+<p>Free grammar checking API. Correct text, analyze readability, detect sentiment, and get writing suggestions with a single request.</p>
+<div class="badge-row">
+<span class="badge green"><span class="badge-dot"></span> GET endpoint</span>
+<span class="badge orange"><span class="badge-dot"></span> 3 req / 25 min</span>
+<span class="badge">v1.0.0</span>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Rate Limits</div>
+<div class="rate-card">
+<h3>Usage Limits</h3>
+<div class="rate-grid">
+<div class="rate-item">
+<span class="rate-value">3</span>
+<span class="rate-label">Requests</span>
+</div>
+<div class="rate-item">
+<span class="rate-value">25</span>
+<span class="rate-label">Minutes Window</span>
+</div>
+<div class="rate-item">
+<span class="rate-value">10K</span>
+<span class="rate-label">Max Characters</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Endpoint</div>
+
+<div class="endpoint-card">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<span class="endpoint-path">/api?req={text}</span>
+</div>
+<div class="endpoint-body">
+<p class="endpoint-desc">Check grammar, spelling, and style of the provided text.</p>
+
+<table class="param-table">
+<thead>
+<tr><th>Parameter</th><th>Type</th><th>Status</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr>
+<td class="param-name">req</td>
+<td class="param-type">string</td>
+<td><span class="param-req">required</span></td>
+<td>The text to check. Max 10,000 characters.</td>
+</tr>
+</tbody>
+</table>
+
+<div class="code-label">Example Request</div>
+<div class="code-block" id="exampleReq">
+<button class="copy-btn" onclick="copyCode('exampleReq')">copy</button>
+<span class="comment">// Simple GET request</span><br>
+GET /api?req=She dont knows nothing<br>
+<br>
+<span class="comment">// cURL</span><br>
+curl "<span class="str">https://your-domain/api?req=She%20dont%20knows%20nothing</span>"<br>
+<br>
+<span class="comment">// JavaScript</span><br>
+<span class="key">const</span> res = <span class="key">await</span> fetch(<span class="str">`/api?req=${</span>encodeURIComponent(text)<span class="str">}`</span>);<br>
+<span class="key">const</span> data = <span class="key">await</span> res.json();
+</div>
+
+<div class="code-label">Example Response (200)</div>
+<div class="code-block" id="exampleRes">
+<button class="copy-btn" onclick="copyCode('exampleRes')">copy</button>
+{<br>
+&nbsp;&nbsp;<span class="key">"original_text"</span>: <span class="str">"She dont knows nothing"</span>,<br>
+&nbsp;&nbsp;<span class="key">"corrected_text"</span>: <span class="str">"She doesn't know anything"</span>,<br>
+&nbsp;&nbsp;<span class="key">"score"</span>: <span class="num">42.5</span>,<br>
+&nbsp;&nbsp;<span class="key">"issue_count"</span>: <span class="num">3</span>,<br>
+&nbsp;&nbsp;<span class="key">"word_count"</span>: <span class="num">4</span>,<br>
+&nbsp;&nbsp;<span class="key">"sentence_count"</span>: <span class="num">1</span>,<br>
+&nbsp;&nbsp;<span class="key">"issues"</span>: [{ ... }],<br>
+&nbsp;&nbsp;<span class="key">"suggestions"</span>: [...],<br>
+&nbsp;&nbsp;<span class="key">"readability_score"</span>: <span class="num">82.1</span>,<br>
+&nbsp;&nbsp;<span class="key">"sentiment"</span>: <span class="str">"negative"</span>,<br>
+&nbsp;&nbsp;<span class="key">"sentiment_polarity"</span>: <span class="num">-0.35</span>,<br>
+&nbsp;&nbsp;<span class="key">"avg_sentence_length"</span>: <span class="num">4.0</span>,<br>
+&nbsp;&nbsp;<span class="key">"vocabulary_richness"</span>: <span class="num">100.0</span>,<br>
+&nbsp;&nbsp;<span class="key">"processing_time_ms"</span>: <span class="num">124</span>,<br>
+&nbsp;&nbsp;<span class="key">"rate_limit"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">"remaining"</span>: <span class="num">2</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">"limit"</span>: <span class="num">3</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="key">"window"</span>: <span class="str">"25 minutes"</span><br>
+&nbsp;&nbsp;}<br>
+}
+</div>
+
+<div class="code-label">Response Fields</div>
+<div class="response-fields">
+<div class="field-item"><span class="field-name">original_text</span><span class="field-desc">The input text as provided</span></div>
+<div class="field-item"><span class="field-name">corrected_text</span><span class="field-desc">Text with corrections applied</span></div>
+<div class="field-item"><span class="field-name">score</span><span class="field-desc">Grammar score from 0 to 100</span></div>
+<div class="field-item"><span class="field-name">issues</span><span class="field-desc">Array of detected issues with offsets, messages, replacements</span></div>
+<div class="field-item"><span class="field-name">suggestions</span><span class="field-desc">Writing improvement tips</span></div>
+<div class="field-item"><span class="field-name">readability_score</span><span class="field-desc">Flesch Reading Ease score (0-100)</span></div>
+<div class="field-item"><span class="field-name">sentiment</span><span class="field-desc">positive, negative, or neutral</span></div>
+<div class="field-item"><span class="field-name">rate_limit</span><span class="field-desc">Current rate limit status</span></div>
+</div>
+
+<div class="code-label">Status Codes</div>
+<div class="status-codes">
+<div class="status-item"><span class="status-code s2xx">200</span><span class="status-text">Success - text analyzed</span></div>
+<div class="status-item"><span class="status-code s4xx">400</span><span class="status-text">Missing req parameter or text too long</span></div>
+<div class="status-item"><span class="status-code s4xx">429</span><span class="status-text">Rate limit exceeded (3 req / 25 min)</span></div>
+<div class="status-item"><span class="status-code s5xx">503</span><span class="status-text">Engine still loading</span></div>
+<div class="status-item"><span class="status-code s5xx">500</span><span class="status-text">Internal server error</span></div>
+</div>
+
+<div class="code-label">Rate Limit Headers</div>
+<div class="code-block">
+<span class="key">X-RateLimit-Limit</span>: <span class="num">3</span><br>
+<span class="key">X-RateLimit-Remaining</span>: <span class="num">2</span><br>
+<span class="key">X-RateLimit-Reset</span>: <span class="num">1500</span> <span class="comment">// seconds until reset (on 429)</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-title">Try It</div>
+<div class="try-section">
+<div class="try-title">Test the API</div>
+<div class="try-row">
+<input type="text" class="try-input" id="tryInput" placeholder="Enter text to check..." value="She dont knows nothing about grammer">
+<button class="try-btn" id="tryBtn" onclick="tryApi()">Send</button>
+</div>
+<div class="try-status" id="tryStatus"></div>
+<div class="try-output" id="tryOutput"></div>
+<div class="try-rate" id="tryRate"></div>
+</div>
+</div>
+
+<div class="footer">
+GrammarZen API v1.0.0
+</div>
+
+</div>
+
+<script>
+function copyCode(id){
+const el=document.getElementById(id);
+const text=el.innerText.replace('copy','').trim();
+navigator.clipboard.writeText(text).then(()=>{
+const btn=el.querySelector('.copy-btn');
+btn.textContent='copied!';
+setTimeout(()=>btn.textContent='copy',1500);
+});
+}
+
+async function tryApi(){
+const input=document.getElementById('tryInput');
+const btn=document.getElementById('tryBtn');
+const output=document.getElementById('tryOutput');
+const status=document.getElementById('tryStatus');
+const rate=document.getElementById('tryRate');
+const text=input.value.trim();
+if(!text)return;
+btn.disabled=true;
+btn.textContent='...';
+status.className='try-status';
+status.textContent='Sending request...';
+output.style.display='block';
+output.textContent='Loading...';
+try{
+const res=await fetch('/api?req='+encodeURIComponent(text));
+const data=await res.json();
+if(res.ok){
+status.className='try-status success';
+status.textContent='200 OK - '+data.processing_time_ms+'ms';
+output.textContent=JSON.stringify(data,null,2);
+if(data.rate_limit){
+rate.textContent='Remaining: '+data.rate_limit.remaining+' / '+data.rate_limit.limit;
+}
+}else{
+status.className='try-status error';
+status.textContent=res.status+' '+res.statusText;
+output.textContent=JSON.stringify(data,null,2);
+if(res.status===429&&data.retry_after_seconds){
+rate.textContent='Rate limited. Retry in '+Math.ceil(data.retry_after_seconds/60)+' minutes.';
+}
+}
+}catch(err){
+status.className='try-status error';
+status.textContent='Request failed';
+output.textContent=err.message;
+}finally{
+btn.disabled=false;
+btn.textContent='Send';
+}
+}
+</script>
+</body>
+</html>
