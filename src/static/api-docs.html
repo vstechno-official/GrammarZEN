@@ -206,13 +206,10 @@ a:hover{color:var(--purple)}
 <div class="code-label">Example Request</div>
 <div class="code-block" id="exampleReq">
 <button class="copy-btn" onclick="copyCode('exampleReq')">copy</button>
-<span class="comment">// Simple GET request</span><br>
 GET /api?req=She dont knows nothing<br>
 <br>
-<span class="comment">// cURL</span><br>
 curl "<span class="str">https://your-domain/api?req=She%20dont%20knows%20nothing</span>"<br>
 <br>
-<span class="comment">// JavaScript</span><br>
 <span class="key">const</span> res = <span class="key">await</span> fetch(<span class="str">`/api?req=${</span>encodeURIComponent(text)<span class="str">}`</span>);<br>
 <span class="key">const</span> data = <span class="key">await</span> res.json();
 </div>
@@ -268,7 +265,7 @@ curl "<span class="str">https://your-domain/api?req=She%20dont%20knows%20nothing
 <div class="code-block">
 <span class="key">X-RateLimit-Limit</span>: <span class="num">3</span><br>
 <span class="key">X-RateLimit-Remaining</span>: <span class="num">2</span><br>
-<span class="key">X-RateLimit-Reset</span>: <span class="num">1500</span> <span class="comment">// seconds until reset (on 429)</span>
+<span class="key">X-RateLimit-Reset</span>: <span class="num">1500</span>
 </div>
 </div>
 </div>
