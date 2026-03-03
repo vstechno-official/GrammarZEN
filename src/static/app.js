@@ -12,7 +12,6 @@ avgSentVal:$('avgSentVal'),vocabVal:$('vocabVal'),processingTime:$('processingTi
 issuesList:$('issuesList'),suggestionsList:$('suggestionsList'),suggestionsPanel:$('suggestionsPanel'),
 correctedOutput:$('correctedOutput'),copyBar:$('copyBar'),
 loadingOverlay:$('loadingOverlay'),loadingText:$('loadingText'),
-statusDot:document.querySelector('.status-dot'),statusText:document.querySelector('.status-text'),
 scoreMini:$('scoreMini')
 };
 function updateCounts(){
@@ -141,14 +140,6 @@ switchTab('corrected');
 }catch(err){showToast(err.message||'Failed to process text.','error');}
 finally{setLoading(false);}
 }
-async function checkHealth(){
-try{
-const res=await fetch(`${API_BASE}/health`);
-const data=await res.json();
-if(data.status==='ok'&&data.engine_ready){elements.statusDot.className='status-dot ready';elements.statusText.textContent='Engine Ready';}
-else{elements.statusDot.className='status-dot';elements.statusText.textContent='Loading Engine...';setTimeout(checkHealth,5000);}
-}catch{elements.statusDot.className='status-dot error';elements.statusText.textContent='Offline';setTimeout(checkHealth,8000);}
-}
 function clearAll(){
 elements.inputText.value='';updateCounts();
 const empty1=`<div class="empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><p>Your corrected text<br>will appear here.</p></div>`;
@@ -191,6 +182,6 @@ $$('.filter-btn').forEach(btn=>btn.addEventListener('click',()=>{
 $$('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
 state.currentFilter=btn.dataset.filter;renderIssues(state.issues,state.currentFilter);
 }));
-updateCounts();updateFilterCounts([]);switchTab('input');checkHealth();
+updateCounts();updateFilterCounts([]);switchTab('input');
 }
 document.addEventListener('DOMContentLoaded',init);
