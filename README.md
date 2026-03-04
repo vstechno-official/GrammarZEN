@@ -2,9 +2,8 @@
 
 ### honestly, i was fed up with grammarly-pricing-prompts and modals.
 
-#### Be happy i opensourced it, else you would have to pay$1 for it per month.
+#### Be happy i opensourced it, else you would have to pay $$ for it per month.
 
-### ps- it was closed source and 4$ permonth sub but opensourced it because had only X users.
 
 @contact- salaskarvedant66@gmail.com
 if any collab or anything such. 
